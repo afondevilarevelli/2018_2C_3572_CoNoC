@@ -105,6 +105,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Game.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Media\Isla\Isla.max" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -157,6 +158,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Media\cajaMadera4.jpg" />
+    <Content Include="Media\Isla\Isla-TgcScene.xml" />
+    <Content Include="Media\Isla\preview.jpg" />
+    <Content Include="Media\Isla\Textures\hojaPalmera.jpg" />
+    <Content Include="Media\Isla\Textures\Palmera_Textura.jpg" />
+    <Content Include="Media\Isla\Textures\Pasto.jpg" />
+    <Content Include="Media\Isla\Textures\Piedra3.jpg" />
+    <Content Include="Media\Isla\Textures\PiedraPasto.jpg" />
+    <Content Include="Media\Isla\Textures\sand.jpg" />
+    <Content Include="Media\Isla\Textures\TransicionPastoArenaDown.jpg" />
+    <Content Include="Media\Isla\Textures\TransicionPastoArenaLeft.jpg" />
+    <Content Include="Media\Isla\Textures\TransicionPastoArenaRight.jpg" />
+    <Content Include="Media\Isla\Textures\TransicionPastoArenaUP.jpg" />
     <Content Include="Media\LogoTGC-TgcScene.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
