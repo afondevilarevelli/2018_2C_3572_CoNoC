@@ -2,7 +2,7 @@
   <name>bloque1a</name>
   <texturesExport enabled="True" dir="Textures" />
   <lightmapExport enabled="False" dir="LightMaps" />
-  <sceneBoundingBox min="[-664.5236,-1.7752,-424.1289]" max="[628.4753,298.1329,734.3854]" />
+  <sceneBoundingBox min="[-652.6521,-1.7752,-424.1289]" max="[628.4753,298.1329,734.3854]" />
   <materials count="5">
     <m name="Standardmaterial" type="Standardmaterial">
       <ambient>[0,0,0,0]</ambient>
@@ -72,19 +72,19 @@
       </texCoordsLightMap>
     </mesh>
     <mesh name="Arbusto20" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[506.5624,59.3902,316.7667]" max="[536.5624,117.6606,346.7667]" />
+      <boundingBox min="[506.5624,60.1377,316.7667]" max="[536.5624,118.4081,346.7667]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[521.5624,59.3527,331.7766]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[521.5624,60.1002,331.7766]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto21" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[498.8445,22.4213,364.8737]" max="[528.8445,80.6918,394.8737]" />
+      <boundingBox min="[498.8445,22.8266,364.8737]" max="[528.8445,81.0971,394.8737]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[513.8445,22.3838,379.8836]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[513.8445,22.7891,379.8836]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto22" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[351.5078,1.945,422.7674]" max="[381.5078,60.2155,452.7674]" />
+      <boundingBox min="[351.5078,3.1005,422.7674]" max="[381.5078,61.371,452.7674]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[366.5078,1.9075,437.7773]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[366.5078,3.063,437.7773]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto23" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[384.3258,3.0569,516.9175]" max="[414.3258,61.3274,546.9175]" />
@@ -92,14 +92,14 @@
       <transform pos="[399.3258,3.0194,531.9274]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto24" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[538.7757,21.5955,459.4745]" max="[568.7757,79.866,489.4745]" />
+      <boundingBox min="[538.7757,20.7656,459.4745]" max="[568.7757,79.0361,489.4745]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[553.7757,21.558,474.4844]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[553.7757,20.7281,474.4844]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto25" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-143.8343,73.732,469.9174]" max="[-113.8343,132.0025,499.9174]" />
+      <boundingBox min="[-143.8343,74.7117,469.9174]" max="[-113.8343,132.9822,499.9174]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-128.8343,73.6945,484.9273]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[-128.8343,74.6742,484.9273]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto26" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[34.048,48.6772,391.76]" max="[64.048,106.9477,421.76]" />
@@ -117,9 +117,9 @@
       <transform pos="[-251.861,86.377,433.5492]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto29" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-411.1223,80.7129,458.8799]" max="[-381.1223,138.9834,488.8799]" />
+      <boundingBox min="[-411.1223,81.6158,458.8799]" max="[-381.1223,139.8863,488.8799]" />
       <originalMesh>0</originalMesh>
-      <transform pos="[-396.1223,80.6754,473.8898]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[-396.1223,81.5783,473.8898]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Arbusto210" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-535.8432,82.1854,430.2378]" max="[-505.8432,140.4559,460.2378]" />
@@ -167,14 +167,14 @@
       </texCoordsLightMap>
     </mesh>
     <mesh name="Palmera0" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
-      <boundingBox min="[379.3184,3.373,501.6433]" max="[628.4753,222.383,734.3854]" />
+      <boundingBox min="[379.3184,5.5333,501.6433]" max="[628.4753,224.5433,734.3854]" />
       <originalMesh>17</originalMesh>
-      <transform pos="[478.6573,3.373,595.6274]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[478.6573,5.5333,595.6274]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Palmera1" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
-      <boundingBox min="[-386.8466,0.0766,489.156]" max="[-137.6896,219.0866,721.8981]" />
+      <boundingBox min="[-386.8466,0.4848,489.156]" max="[-137.6896,219.4948,721.8981]" />
       <originalMesh>17</originalMesh>
-      <transform pos="[-287.5076,0.0766,583.1401]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <transform pos="[-287.5076,0.4848,583.1401]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Pasto" layer="0" type="Original" matId="2" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-24.5236,-1.7752,-27.1082]" max="[30.9628,23.5675,25.7575]" />
@@ -276,20 +276,10 @@
       <originalMesh>20</originalMesh>
       <transform pos="[-227.5038,119.6,-96.2804]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
-    <mesh name="Pasto17" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-475.9415,117.8248,-152.3198]" max="[-420.4551,143.1675,-99.4541]" />
-      <originalMesh>20</originalMesh>
-      <transform pos="[-451.4179,119.6,-125.2116]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
-    </mesh>
     <mesh name="Pasto18" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[-579.8665,116.8275,-134.3282]" max="[-524.3801,142.1702,-81.4625]" />
       <originalMesh>20</originalMesh>
       <transform pos="[-555.3429,118.6027,-107.22]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
-    </mesh>
-    <mesh name="Pasto19" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
-      <boundingBox min="[-664.5236,111.3248,-153.7452]" max="[-609.0371,136.6675,-100.8795]" />
-      <originalMesh>20</originalMesh>
-      <transform pos="[-639.9999,113.1,-126.637]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Pasto20" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
       <boundingBox min="[440.8998,115.5694,246.2527]" max="[496.3862,140.9122,299.1184]" />
@@ -358,82 +348,82 @@
     </mesh>
     <mesh name="Roca0" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-323.6381,154.96,-311.2953]" max="[-294.0724,189.5531,-284.3947]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-309.2928,155.0534,-299.0851]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca1" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-266.8333,167.7727,-317.1056]" max="[-237.2677,202.3657,-290.205]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-252.4881,167.866,-304.8954]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca2" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-63.8283,131.4757,-339.5814]" max="[-34.2627,166.0688,-312.6808]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-49.4831,131.5691,-327.3712]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca3" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[50.7795,164.5854,-361.9796]" max="[80.3451,199.1785,-335.079]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[65.1247,164.6788,-349.7694]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca4" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[149.1153,192.4053,-364.2096]" max="[178.6809,226.9984,-337.309]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[163.4605,192.4987,-351.9994]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca5" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[278.2768,192.9806,-365.1588]" max="[307.8424,227.5737,-338.2582]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[292.622,193.074,-352.9486]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca6" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[272.0618,231.2895,-381.6268]" max="[301.6274,265.8826,-354.7262]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[286.407,231.3829,-369.4166]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca7" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[169.3448,233.2853,-424.1289]" max="[198.9104,267.8784,-397.2283]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[183.69,233.3787,-411.9187]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca8" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-26.7833,206.0815,-375.4825]" max="[2.7824,240.6746,-348.5818]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-12.4381,206.1749,-363.2722]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca9" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-130.1623,219.1087,-390.001]" max="[-100.5967,253.7018,-363.1004]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-115.8171,219.202,-377.7908]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca10" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-276.0726,222.4538,-336.4537]" max="[-246.507,257.0469,-309.5531]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-261.7274,222.5471,-324.2435]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca11" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-510.2568,250.7307,-323.5074]" max="[-480.6912,285.3237,-296.6068]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-495.9116,250.824,-311.2972]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca12" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-422.7695,242.6442,-341.4403]" max="[-393.2039,277.2374,-314.5397]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-408.4243,242.7376,-329.2301]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca13" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-611.6153,263.5398,-353.537]" max="[-582.0497,298.1329,-326.6364]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-597.2701,263.6332,-341.3268]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca14" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-625.8657,235.6475,-326.2049]" max="[-596.3001,270.2406,-299.3043]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-611.5205,235.7409,-313.9947]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="Roca15" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-539.1011,207.0104,-311.8086]" max="[-509.5355,241.6035,-284.908]" />
-      <originalMesh>51</originalMesh>
+      <originalMesh>49</originalMesh>
       <transform pos="[-524.7559,207.1038,-299.5984]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="ArbolBananas" layer="0" type="Original" matId="4" color="[1,1,1]" visibility="1.0" lightmap="">
@@ -453,28 +443,38 @@
     </mesh>
     <mesh name="ArbolBananas0" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[212.9956,141.8749,-329.9749]" max="[294.834,225.6953,-249.8605]" />
-      <originalMesh>68</originalMesh>
+      <originalMesh>66</originalMesh>
       <transform pos="[254.4296,141.8332,-288.7489]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="ArbolBananas1" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-174.2572,119.9882,-249.5403]" max="[-92.4188,203.8086,-169.4259]" />
-      <originalMesh>68</originalMesh>
+      <originalMesh>66</originalMesh>
       <transform pos="[-132.8232,119.9465,-208.3143]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="ArbolBananas2" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-445.8376,160.138,-304.5149]" max="[-363.9992,243.9584,-224.4005]" />
-      <originalMesh>68</originalMesh>
+      <originalMesh>66</originalMesh>
       <transform pos="[-404.4036,160.0963,-263.2889]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="ArbolBananas3" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
-      <boundingBox min="[-652.6521,181.752,-311.049]" max="[-570.8137,265.5724,-230.9346]" />
-      <originalMesh>68</originalMesh>
-      <transform pos="[-611.2181,181.7103,-269.823]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+      <boundingBox min="[-652.6521,181.7521,-311.049]" max="[-570.8137,265.5724,-230.9346]" />
+      <originalMesh>66</originalMesh>
+      <transform pos="[-611.2181,181.7104,-269.823]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
     <mesh name="ArbolBananas4" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="1.0" lightmap="">
       <boundingBox min="[-616.7695,119.4679,-209.7641]" max="[-534.931,203.2883,-129.6497]" />
-      <originalMesh>68</originalMesh>
+      <originalMesh>66</originalMesh>
       <transform pos="[-575.3354,119.4262,-168.5381]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+    </mesh>
+    <mesh name="Pasto17" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-463.291,117.8248,-146.6457]" max="[-407.8046,143.1675,-93.78]" />
+      <originalMesh>20</originalMesh>
+      <transform pos="[-438.7674,119.6,-119.5375]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
+    </mesh>
+    <mesh name="Pasto19" layer="" type="Instance" matId="0" color="[1,1,1]" visibility="0" lightmap="">
+      <boundingBox min="[-651.6144,114.6812,-157.8789]" max="[-596.1279,140.0239,-105.0132]" />
+      <originalMesh>20</originalMesh>
+      <transform pos="[-627.0906,116.4564,-130.7707]" rotQuat="[0,0,0,0]" scale="[1,1,1]" />
     </mesh>
   </meshes>
 </tgcScene>

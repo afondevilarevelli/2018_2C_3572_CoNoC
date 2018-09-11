@@ -58,13 +58,13 @@ namespace TGC.Group.Model
             
             escena = loader.loadSceneFromFile(MediaDir + /* path de la escena*/ /*EJ: */"Bloque1\\bloque1a-TgcScene.xml");
 
-            Camara = new CamaraExploradora(new TGCVector3(900f, 400f, 900f), Input);
+            Camara = new CamaraExploradora(new TGCVector3(4700f, 1200f, 1400f), Input);
 
 
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = MediaDir + "Bloque1\\" + "bloque1a.jpg";
 
-            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, /*50.0f*/50.0f, 1.5f);
+            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, 50.0f, 1.5f);
 			
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = MediaDir + "Bloque1\\" + "tcgpisoescenario.png";
