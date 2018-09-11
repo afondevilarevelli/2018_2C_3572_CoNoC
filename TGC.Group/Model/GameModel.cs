@@ -1,4 +1,5 @@
 using Microsoft.DirectX.DirectInput;
+using Microsoft.DirectX.Direct3D;
 using System.Drawing;
 using TGC.Core.Direct3D;
 using TGC.Core.Example;
@@ -17,24 +18,28 @@ namespace TGC.Group.Model
     ///     line 97.
     /// </summary>
     public class GameModel : TgcExample
-    {
-        /// <summary>
-        ///     Constructor del juego.
-        /// </summary>
-        /// <param name="mediaDir">Ruta donde esta la carpeta con los assets</param>
-        /// <param name="shadersDir">Ruta donde esta la carpeta con los shaders</param>
-        public GameModel(string mediaDir, string shadersDir) : base(mediaDir, shadersDir)
+    {/*
+		private TGCTextureModifier heightmapModifier;
+		private TGCFloatModifier scaleXZModifier;
+		private TGCFloatModifier scaleYModifier;
+		private TGCTextureModifier textureModifier;*/
+
+		private string currentHeightmap;
+		private string currentTexture;
+		private Texture terrainTexture;
+		private int totalVertices = 300;
+		private VertexBuffer vbTerrain;
+		/// <summary>
+		///     Constructor del juego.
+		/// </summary>
+		/// <param name="mediaDir">Ruta donde esta la carpeta con los assets</param>
+		/// <param name="shadersDir">Ruta donde esta la carpeta con los shaders</param>
+		public GameModel(string mediaDir, string shadersDir) : base(mediaDir, shadersDir)
         {
             Category = Game.Default.Category;
             Name = Game.Default.Name;
             Description = Game.Default.Description;
         }
-
-        //Caja que se muestra en el ejemplo.
-          //private TGCBox Box { get; set; }
-
-        //Mesh de TgcLogo.
-          //private TgcMesh Mesh { get; set; }
 
         private TgcScene escena { get; set; }
 
@@ -50,84 +55,173 @@ namespace TGC.Group.Model
         public override void Init()
         {
             var loader = new TgcSceneLoader();
-            //Device de DirectX para crear primitivas.
-            //var d3dDevice = D3DDevice.Instance.Device;
+            
+            escena = loader.loadSceneFromFile(MediaDir + /* path de la escena*/ /*EJ: */"Bloque1\\bloque1a-TgcScene.xml");
 
-            //Textura de la carperta Media. Game.Default es un archivo de configuracion (Game.settings) util para poner cosas.
-            //Pueden abrir el Game.settings que se ubica dentro de nuestro proyecto para configurar.
-            //var pathTexturaCaja = MediaDir + Game.Default.TexturaCaja;
-
-            //Cargamos una textura, tener en cuenta que cargar una textura significa crear una copia en memoria.
-            //Es importante cargar texturas en Init, si se hace en el render loop podemos tener grandes problemas si instanciamos muchas.
-            //var texture = TgcTexture.createTexture(pathTexturaCaja);
-
-            //Creamos una caja 3D ubicada de dimensiones (5, 10, 5) y la textura como color.
-            //var size = new TGCVector3(5, 10, 5);
-            //Construimos una caja según los parámetros, por defecto la misma se crea con centro en el origen y se recomienda así para facilitar las transformaciones.
-            //Box = TGCBox.fromSize(size, texture);
-            //Posición donde quiero que este la caja, es común que se utilicen estructuras internas para las transformaciones.
-            //Entonces actualizamos la posición lógica, luego podemos utilizar esto en render para posicionar donde corresponda con transformaciones.
-            //Box.Position = new TGCVector3(-25, 0, 0);
-
-            //Cargo el unico mesh que tiene la escena.
-            //Mesh = new TgcSceneLoader().loadSceneFromFile(MediaDir + "LogoTGC-TgcScene.xml").Meshes[0];
-            //Defino una escala en el modelo logico del mesh que es muy grande.
-            //Mesh.Scale = new TGCVector3(0.5f, 0.5f, 0.5f);
-
-            escena = loader.loadSceneFromFile(MediaDir + /* path de la escena*/ /*EJ: */"Isla\\Isla-TgcScene.xml" );
-
-            //Suelen utilizarse objetos que manejan el comportamiento de la camara.
-            //Lo que en realidad necesitamos gráficamente es una matriz de View.
-            //El framework maneja una cámara estática, pero debe ser inicializada.
-            //Posición de la camara.
-            var cameraPosition = new TGCVector3(0, 200, -400);
-            //Quiero que la camara mire hacia el origen (0,0,0).
+            var cameraPosition = new TGCVector3(0, 0, 0);
             var lookAt = TGCVector3.Empty;
-            //Configuro donde esta la posicion de la camara y hacia donde mira.
-            Camara.SetCamera(cameraPosition, lookAt);
-            //Internamente el framework construye la matriz de view con estos dos vectores.
-            //Luego en nuestro juego tendremos que crear una cámara que cambie la matriz de view con variables como movimientos o animaciones de escenas.
-        }
+			Camara.SetCamera(cameraPosition, lookAt);
 
-        /// <summary>
-        ///     Se llama en cada frame.
-        ///     Se debe escribir toda la lógica de computo del modelo, así como también verificar entradas del usuario y reacciones
-        ///     ante ellas.
-        /// </summary>
-        public override void Update()
+			
+			//Path de Heightmap default del terreno y Modifier para cambiarla
+            currentHeightmap = MediaDir + "Bloque1\\" + "bloque1a.jpg";
+
+            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, 50.0f, 1.5f);
+			
+            //Path de Textura default del terreno y Modifier para cambiarla
+            currentTexture = MediaDir + "Bloque1\\" + "tcgpisoescenario.png";
+            loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
+		}
+
+		public override void Update()
         {
             PreUpdate();
 
-            //Capturar Input teclado
-            if (Input.keyPressed(Key.F))
+			TGCVector3 normalLA = TGCVector3.Normalize(Camara.LookAt);
+
+			//Capturar Input teclado
+			if (Input.keyPressed(Key.F))
             {
                 BoundingBox = !BoundingBox;
             }
 
             //Capturar Input Mouse
-            if (Input.buttonUp(TgcD3dInput.MouseButtons.BUTTON_LEFT))
+            if (Input.keyDown(Key.Space))
             {
-                //Como ejemplo podemos hacer un movimiento simple de la cámara.
-                //En este caso le sumamos un valor en Y
-                Camara.SetCamera(Camara.Position + new TGCVector3(0, 10f, 0), Camara.LookAt);
-                //Ver ejemplos de cámara para otras operaciones posibles.
+                Camara.SetCamera(Camara.Position + new TGCVector3(0, 1.0f, 0), Camara.LookAt);
+			}
+			else if(Input.keyDown(Key.LeftControl))
+			{
+				Camara.SetCamera(Camara.Position + new TGCVector3(0, -1.0f, 0), Camara.LookAt);
+			}
 
-                //Si superamos cierto Y volvemos a la posición original.
-                if (Camara.Position.Y > 300f)
-                {
-                    Camara.SetCamera(new TGCVector3(Camara.Position.X, 0f, Camara.Position.Z), Camara.LookAt);
-                }
-            }
+			if (Input.keyDown(Key.A))
+			{
+				Camara.SetCamera(Camara.Position, Camara.LookAt + new TGCVector3((float)System.Math.Cos(10.0f), 0.0f, (float)-System.Math.Sin(10.0f)));
+			}
+			else if (Input.keyDown(Key.D))
+			{
+				Camara.SetCamera(Camara.Position, Camara.LookAt - new TGCVector3((float)System.Math.Cos(10.0f), 0.0f, (float)-System.Math.Sin(10.0f)));
+			}
 
-            PostUpdate();
+			if (Input.keyDown(Key.W))
+			{
+				Camara.SetCamera(Camara.Position, Camara.LookAt + new TGCVector3(0.0f, 1.0f, 0.0f));
+			}
+			else if (Input.keyDown(Key.S))
+			{
+				Camara.SetCamera(Camara.Position, Camara.LookAt + new TGCVector3(0.0f, -1.0f, 0.0f));
+			}
+
+			if (Input.keyDown(Key.UpArrow))
+			{
+				Camara.SetCamera(Camara.Position + TGCVector3.Multiply(normalLA, 5.0f), Camara.LookAt);
+			}
+			else if (Input.keyDown(Key.DownArrow))
+			{
+				Camara.SetCamera(Camara.Position - TGCVector3.Multiply(normalLA, 5.0f), Camara.LookAt);
+			}
+
+			PostUpdate();
         }
 
-        /// <summary>
-        ///     Se llama cada vez que hay que refrescar la pantalla.
-        ///     Escribir aquí todo el código referido al renderizado.
-        ///     Borrar todo lo que no haga falta.
-        /// </summary>
-        public override void Render()
+		/// <summary>
+		///     Crea y carga el VertexBuffer en base a una textura de Heightmap
+		/// </summary>
+		private void createHeightMapMesh(Microsoft.DirectX.Direct3D.Device d3dDevice, string path, float scaleXZ, float scaleY)
+		{
+			//parsear bitmap y cargar matriz de alturas
+			var heightmap = loadHeightMap(path);
+
+			//Crear vertexBuffer
+			totalVertices = 2 * 3 * (heightmap.GetLength(0) - 1) * (heightmap.GetLength(1) - 1);
+			vbTerrain = new VertexBuffer(typeof(CustomVertex.PositionTextured), totalVertices, d3dDevice, Usage.Dynamic | Usage.WriteOnly, CustomVertex.PositionTextured.Format, Pool.Default);
+
+			//Crear array temporal de vertices
+			var dataIdx = 0;
+			var data = new CustomVertex.PositionTextured[totalVertices];
+
+			//Iterar sobre toda la matriz del Heightmap y crear los triangulos necesarios para el terreno
+			for (var i = 0; i < heightmap.GetLength(0) - 1; i++)
+			{
+				for (var j = 0; j < heightmap.GetLength(1) - 1; j++)
+				{
+					//Crear los cuatro vertices que conforman este cuadrante, aplicando la escala correspondiente
+					var v1 = new TGCVector3(i * scaleXZ, heightmap[i, j] * scaleY, j * scaleXZ);
+					var v2 = new TGCVector3(i * scaleXZ, heightmap[i, j + 1] * scaleY, (j + 1) * scaleXZ);
+					var v3 = new TGCVector3((i + 1) * scaleXZ, heightmap[i + 1, j] * scaleY, j * scaleXZ);
+					var v4 = new TGCVector3((i + 1) * scaleXZ, heightmap[i + 1, j + 1] * scaleY, (j + 1) * scaleXZ);
+
+					//Crear las coordenadas de textura para los cuatro vertices del cuadrante
+					var t1 = new TGCVector2(i / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+					var t2 = new TGCVector2(i / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+					var t3 = new TGCVector2((i + 1) / (float)heightmap.GetLength(0), j / (float)heightmap.GetLength(1));
+					var t4 = new TGCVector2((i + 1) / (float)heightmap.GetLength(0), (j + 1) / (float)heightmap.GetLength(1));
+
+					//Cargar triangulo 1
+					data[dataIdx] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+					data[dataIdx + 1] = new CustomVertex.PositionTextured(v2, t2.X, t2.Y);
+					data[dataIdx + 2] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+
+					//Cargar triangulo 2
+					data[dataIdx + 3] = new CustomVertex.PositionTextured(v1, t1.X, t1.Y);
+					data[dataIdx + 4] = new CustomVertex.PositionTextured(v4, t4.X, t4.Y);
+					data[dataIdx + 5] = new CustomVertex.PositionTextured(v3, t3.X, t3.Y);
+
+					dataIdx += 6;
+				}
+			}
+
+			//Llenar todo el VertexBuffer con el array temporal
+			vbTerrain.SetData(data, 0, LockFlags.None);
+		}
+
+		/// <summary>
+		///     Cargar textura
+		/// </summary>
+		private void loadTerrainTexture(Microsoft.DirectX.Direct3D.Device d3dDevice, string path)
+		{
+			//Rotar e invertir textura
+			var b = (Bitmap)Image.FromFile(path);
+			b.RotateFlip(RotateFlipType.Rotate90FlipX);
+			terrainTexture = Texture.FromBitmap(d3dDevice, b, Usage.None, Pool.Managed);
+		}
+
+		/// <summary>
+		///     Cargar Bitmap y obtener el valor en escala de gris de Y
+		///     para cada coordenada (x,z)
+		/// </summary>
+		private int[,] loadHeightMap(string path)
+		{
+			//Cargar bitmap desde el FileSystem
+			var bitmap = (Bitmap)Image.FromFile(path);
+			var width = bitmap.Size.Width;
+			var height = bitmap.Size.Height;
+			var heightmap = new int[width, height];
+
+			for (var i = 0; i < width; i++)
+			{
+				for (var j = 0; j < height; j++)
+				{
+					//Obtener color
+					//(j, i) invertido para primero barrer filas y despues columnas
+					var pixel = bitmap.GetPixel(j, i);
+
+					//Calcular intensidad en escala de grises
+					var intensity = pixel.R * 0.299f + pixel.G * 0.587f + pixel.B * 0.114f;
+					heightmap[i, j] = (int)intensity;
+				}
+			}
+
+			return heightmap;
+		}
+
+		/// <summary>
+		///     Se llama cada vez que hay que refrescar la pantalla.
+		///     Escribir aquí todo el código referido al renderizado.
+		///     Borrar todo lo que no haga falta.
+		/// </summary>
+		public override void Render()
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
@@ -136,31 +230,22 @@ namespace TGC.Group.Model
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
             DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TGCVector3.PrintVector3(Camara.Position), 0, 30, Color.OrangeRed);
 
-            //Siempre antes de renderizar el modelo necesitamos actualizar la matriz de transformacion.
-            //Debemos recordar el orden en cual debemos multiplicar las matrices, en caso de tener modelos jerárquicos, tenemos control total.
-            //Box.Transform = TGCMatrix.Scaling(Box.Scale) * TGCMatrix.RotationYawPitchRoll(Box.Rotation.Y, Box.Rotation.X, Box.Rotation.Z) * TGCMatrix.Translation(Box.Position);
-            //A modo ejemplo realizamos toda las multiplicaciones, pero aquí solo nos hacia falta la traslación.
-            //Finalmente invocamos al render de la caja
-            //Box.Render();
-
-            //Cuando tenemos modelos mesh podemos utilizar un método que hace la matriz de transformación estándar.
-            //Es útil cuando tenemos transformaciones simples, pero OJO cuando tenemos transformaciones jerárquicas o complicadas.
-            //Mesh.UpdateMeshTransform();
-            //Render del mesh
-            //Mesh.Render();
-
             escena.RenderAll();
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
             {
-                //Box.BoundingBox.Render();
-                //Mesh.BoundingBox.Render();
                 escena.BoundingBox.Render();
             }
 
-            //Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
-            PostRender();
+			//Render terrain
+			D3DDevice.Instance.Device.SetTexture(0, terrainTexture);
+			D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
+			D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
+			D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
+			
+			//Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
+			PostRender();
         }
 
         /// <summary>
