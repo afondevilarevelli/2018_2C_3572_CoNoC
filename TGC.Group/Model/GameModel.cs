@@ -7,6 +7,7 @@ using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
+using TGC.Core.Terrain;
 using TGC.Group.Model.Camara;
 
 namespace TGC.Group.Model
@@ -52,23 +53,32 @@ namespace TGC.Group.Model
         ///     procesamiento que podemos pre calcular para nuestro juego.
         ///     Borrar el codigo ejemplo no utilizado.
         /// </summary>
+
+        TgcSimpleTerrain terreno = new TgcSimpleTerrain();
         public override void Init()
         {
             var loader = new TgcSceneLoader(); 
             
             escena = loader.loadSceneFromFile(MediaDir + /* path de la escena*/ /*EJ: */"Bloque1\\bloque1a-TgcScene.xml");
-
+            int i;
+           /* TGCVector3 desplazamiento = new TGCVector3();
+            for (i = 0; i < escena.Meshes.Count; i++)
+            {
+                escena.Meshes[0].Position += desplazamiento;
+            }*/
             Camara = new CamaraExploradora(new TGCVector3(4700f, 1200f, 1400f), Input);
 
-
+            
             //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = MediaDir + "Bloque1\\" + "bloque1a.jpg";
 
-            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, 50.0f, 1.5f);
-			
+            terreno.loadHeightmap(currentHeightmap, 50.0f, 1.0f, new TGCVector3(0.0f, 0.0f, 0.0f));
+            //createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, 25.0f, 1.5f);
+
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = MediaDir + "Bloque1\\" + "tcgpisoescenario.png";
-            loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
+            terreno.loadTexture(currentTexture);
+            //loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
 
 		}
 
@@ -200,11 +210,13 @@ namespace TGC.Group.Model
                 escena.BoundingBox.Render();
             }
 
-			//Render terrain
+            //Render terrain
+            terreno.Render();
+            /*
 			D3DDevice.Instance.Device.SetTexture(0, terrainTexture);
 			D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
 			D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
-			D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);
+			D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);*/
 			
 			//Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
 			PostRender();
