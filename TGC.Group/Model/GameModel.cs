@@ -7,7 +7,7 @@ using TGC.Core.Geometry;
 using TGC.Core.Input;
 using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
-using TGC.Core.Textures;
+using TGC.Group.Model.Camara;
 
 namespace TGC.Group.Model
 {
@@ -54,73 +54,35 @@ namespace TGC.Group.Model
         /// </summary>
         public override void Init()
         {
-            var loader = new TgcSceneLoader();
+            var loader = new TgcSceneLoader(); 
             
             escena = loader.loadSceneFromFile(MediaDir + /* path de la escena*/ /*EJ: */"Bloque1\\bloque1a-TgcScene.xml");
 
-            var cameraPosition = new TGCVector3(0, 0, 0);
-            var lookAt = TGCVector3.Empty;
-			Camara.SetCamera(cameraPosition, lookAt);
+            Camara = new CamaraExploradora(new TGCVector3(900f, 400f, 900f), Input);
 
-			
-			//Path de Heightmap default del terreno y Modifier para cambiarla
+
+            //Path de Heightmap default del terreno y Modifier para cambiarla
             currentHeightmap = MediaDir + "Bloque1\\" + "bloque1a.jpg";
 
-            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, 50.0f, 1.5f);
+            createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, /*50.0f*/50.0f, 1.5f);
 			
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = MediaDir + "Bloque1\\" + "tcgpisoescenario.png";
             loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
+
 		}
 
 		public override void Update()
         {
             PreUpdate();
 
-			TGCVector3 normalLA = TGCVector3.Normalize(Camara.LookAt);
+			//TGCVector3 normalLA = TGCVector3.Normalize(Camara.LookAt);
 
 			//Capturar Input teclado
 			if (Input.keyPressed(Key.F))
             {
                 BoundingBox = !BoundingBox;
             }
-
-            //Capturar Input Mouse
-            if (Input.keyDown(Key.Space))
-            {
-                Camara.SetCamera(Camara.Position + new TGCVector3(0, 1.0f, 0), Camara.LookAt);
-			}
-			else if(Input.keyDown(Key.LeftControl))
-			{
-				Camara.SetCamera(Camara.Position + new TGCVector3(0, -1.0f, 0), Camara.LookAt);
-			}
-
-			if (Input.keyDown(Key.A))
-			{
-				Camara.SetCamera(Camara.Position, Camara.LookAt + new TGCVector3((float)System.Math.Cos(10.0f), 0.0f, (float)-System.Math.Sin(10.0f)));
-			}
-			else if (Input.keyDown(Key.D))
-			{
-				Camara.SetCamera(Camara.Position, Camara.LookAt - new TGCVector3((float)System.Math.Cos(10.0f), 0.0f, (float)-System.Math.Sin(10.0f)));
-			}
-
-			if (Input.keyDown(Key.W))
-			{
-				Camara.SetCamera(Camara.Position, Camara.LookAt + new TGCVector3(0.0f, 1.0f, 0.0f));
-			}
-			else if (Input.keyDown(Key.S))
-			{
-				Camara.SetCamera(Camara.Position, Camara.LookAt + new TGCVector3(0.0f, -1.0f, 0.0f));
-			}
-
-			if (Input.keyDown(Key.UpArrow))
-			{
-				Camara.SetCamera(Camara.Position + TGCVector3.Multiply(normalLA, 5.0f), Camara.LookAt);
-			}
-			else if (Input.keyDown(Key.DownArrow))
-			{
-				Camara.SetCamera(Camara.Position - TGCVector3.Multiply(normalLA, 5.0f), Camara.LookAt);
-			}
 
 			PostUpdate();
         }
@@ -255,11 +217,6 @@ namespace TGC.Group.Model
         /// </summary>
         public override void Dispose()
         {
-            //Dispose de la caja.
-              //Box.Dispose();
-            //Dispose del mesh.
-              //Mesh.Dispose();
-
             escena.DisposeAll();
         }
     }
