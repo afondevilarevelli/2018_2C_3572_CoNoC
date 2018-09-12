@@ -69,10 +69,10 @@ namespace TGC.Group.Model
             Camara = new CamaraExploradora(new TGCVector3(4700f, 1200f, 1400f), Input);
 
             
-            //Path de Heightmap default del terreno y Modifier para cambiarla
+            //Path de Heightmap default del terreno y Modifier para cambiarl
             currentHeightmap = MediaDir + "Bloque1\\" + "bloque1a.jpg";
 
-            terreno.loadHeightmap(currentHeightmap, 50.0f, 1.0f, new TGCVector3(0.0f, 0.0f, 0.0f));
+            terreno.loadHeightmap(currentHeightmap, 20.0f, 1.30f, new TGCVector3(0.0f, 0.0f, 0.0f));
             //createHeightMapMesh(D3DDevice.Instance.Device, currentHeightmap, 25.0f, 1.5f);
 
             //Path de Textura default del terreno y Modifier para cambiarla
