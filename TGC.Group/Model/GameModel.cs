@@ -9,6 +9,7 @@ using TGC.Core.Mathematica;
 using TGC.Core.SceneLoader;
 using TGC.Core.Terrain;
 using TGC.Group.Model.Camara;
+using System.Linq;
 
 namespace TGC.Group.Model
 {
@@ -47,6 +48,8 @@ namespace TGC.Group.Model
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
 
+        private TGCMatrix tranfMesh;
+
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
         ///     Escribir aquí todo el código de inicialización: cargar modelos, texturas, estructuras de optimización, todo
@@ -55,18 +58,19 @@ namespace TGC.Group.Model
         /// </summary>
 
         TgcSimpleTerrain terreno = new TgcSimpleTerrain();
+        
         public override void Init()
         {
             var loader = new TgcSceneLoader(); 
             
-            escena = loader.loadSceneFromFile(MediaDir + /* path de la escena*/ /*EJ: */"Bloque1\\bloque1a-TgcScene.xml");
-            int i;
-           /* TGCVector3 desplazamiento = new TGCVector3();
-            for (i = 0; i < escena.Meshes.Count; i++)
+            escena = loader.loadSceneFromFile(MediaDir + "Bloque1\\bloque1a-TgcScene.xml");
+            tranfMesh = TGCMatrix.Translation(0, 100, 0); // NO TIENE EFECTO!
+            for (int i = 0; i < escena.Meshes.Count(); i++)
             {
-                escena.Meshes[0].Position += desplazamiento;
-            }*/
-            Camara = new CamaraExploradora(new TGCVector3(4700f, 1200f, 1400f), Input);
+                escena.Meshes[i].Transform = tranfMesh;
+            }
+
+            Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);
 
             
             //Path de Heightmap default del terreno y Modifier para cambiarl
@@ -78,7 +82,9 @@ namespace TGC.Group.Model
             //Path de Textura default del terreno y Modifier para cambiarla
             currentTexture = MediaDir + "Bloque1\\" + "tcgpisoescenario.png";
             terreno.loadTexture(currentTexture);
+         
             //loadTerrainTexture(D3DDevice.Instance.Device, currentTexture);
+
 
 		}
 
