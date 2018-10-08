@@ -86,6 +86,7 @@
       <DependentUpon>Game.settings</DependentUpon>
     </Compile>
     <Compile Include="Model\Camara\CamaraExploradora.cs" />
+    <Compile Include="Model\Camara\camaraRotacional.cs" />
     <Compile Include="Model\GameModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -173,6 +174,7 @@
     <Content Include="Media\Isla\Textures\TransicionPastoArenaUP.jpg" />
     <Content Include="Media\LogoTGC-TgcScene.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>
