@@ -11,6 +11,7 @@ using TGC.Group.Model.Camara;
 using System.Linq;
 using TGC.Core.Textures;
 using TGC.Core.SceneLoader;
+using System.Collections.Generic;
 
 namespace TGC.Group.Model
 {
@@ -22,12 +23,15 @@ namespace TGC.Group.Model
     /// </summary>
     public class GameModel : TgcExample
     {
-        private TgcScene currentScene;
-        private string currentHeightmap;
-		private string currentTexture;
-        TgcSimpleTerrain terreno = new TgcSimpleTerrain();
+        private string Heightmap;
+        private string texturaHeightmap;
+        TgcSimpleTerrain terreno1 = new TgcSimpleTerrain();
+        TgcSimpleTerrain terreno2 = new TgcSimpleTerrain();
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
+        private List<TgcScene> escenas = new List<TgcScene>();
+        
+
         /// <summary>
         ///     Constructor del juego.
         /// </summary>
@@ -50,25 +54,30 @@ namespace TGC.Group.Model
         public override void Init()
         { 
             var loader = new TgcSceneLoader();
-            
-            currentScene = loader.loadSceneFromFile(MediaDir + "Bloque1\\bloque1a-TgcScene.xml");
-            for(int i=0; i<currentScene.Meshes.Count(); i++)
-            {
-                if (currentScene.Meshes[i].MeshInstances.Count() != 0)
-                {
-                    currentScene.Meshes.Remove(currentScene.Meshes[i]);
-                }
-            }
+
+            escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion1-TgcScene.xml"));
+            //escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion1-TgcScene.xml"));
+
+            quitarMeshesOriginalesEscenas();
 
             Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);
 
             
             //Path de Heightmap default del terreno 
-            currentHeightmap = MediaDir + "Bloque1\\" + "bloque1a.jpg";
-            terreno.loadHeightmap(currentHeightmap, 20.0f, 1.3f, new TGCVector3(0.0f, 0.0f, 0.0f));
+            Heightmap = MediaDir + "Bloque1\\" + "heightmapTP.jpg";
+            terreno1.loadHeightmap(Heightmap, 20.0f, 1.3f, new TGCVector3(0.0f, 0.0f, 0.0f));
             //Path de Textura default del terreno y Modifier para cambiarla
-            currentTexture = MediaDir + "Bloque1\\" + "tcgpisoescenario.png";
-            terreno.loadTexture(currentTexture);  
+            texturaHeightmap = MediaDir + "Bloque1\\" + "tgcPisoEscenario.png";
+            terreno1.loadTexture(texturaHeightmap);
+
+            //Path de Heightmap default del terreno 
+            Heightmap = MediaDir + "Bloque1\\" + "heightmapTP.jpg";
+            terreno2.loadHeightmap(Heightmap, 20.0f, 1.3f, terreno1.Center + new TGCVector3(50, 0.0f, 0.0f));
+            //Path de Textura default del terreno y Modifier para cambiarla
+            texturaHeightmap = MediaDir + "Bloque1\\" + "tgcPisoEscenario.png";
+            terreno2.loadTexture(texturaHeightmap);
+
+
         }
 
 		public override void Update()
@@ -98,28 +107,20 @@ namespace TGC.Group.Model
             PreRender();
 
             //Dibuja un texto por pantalla
-            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
-            DrawText.drawText("Con clic izquierdo subimos la camara [Actual]: " + TGCVector3.PrintVector3(Camara.Position), 0, 30, Color.OrangeRed);
+            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);           
 
             //Render terrain
-            terreno.Render();
-
-
-            currentScene.RenderAll();
+            terreno1.Render();
+            terreno2.Render();
+            //Render escena
+            RenderEscenas(); //NO SE COMO IR MOVIENDO LAS ESCENAS CON LOS HEIGHTMAPS!!!!!!!!!!!!!!!!!!!!
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
             {
-                currentScene.BoundingBox.Render();
+                BoundingBoxEscenas();
             }
-
-            /*
-			D3DDevice.Instance.Device.SetTexture(0, terrainTexture);
-			D3DDevice.Instance.Device.VertexFormat = CustomVertex.PositionTextured.Format;
-			D3DDevice.Instance.Device.SetStreamSource(0, vbTerrain, 0);
-			D3DDevice.Instance.Device.DrawPrimitives(PrimitiveType.TriangleList, 0, totalVertices / 3);*/
-			
-			//Finaliza el render y presenta en pantalla, al igual que el preRender se debe para casos puntuales es mejor utilizar a mano las operaciones de EndScene y PresentScene
+						
 			PostRender();
         }
 
@@ -130,8 +131,53 @@ namespace TGC.Group.Model
         /// </summary>
         public override void Dispose()
         {
-            currentScene.DisposeAll();
-            terreno.Dispose();
+            DisposeEscenas();
+            terreno1.Dispose();
+            terreno2.Dispose();
         }
+
+        //FUNCIONES PRIVADAS
+
+        private void DisposeEscenas()
+        {
+            for(int i=0; i < escenas.Count(); i++)
+            {
+                escenas[i].DisposeAll();
+            }
+        }
+
+        private void BoundingBoxEscenas()
+        {
+            for (int i = 0; i < escenas.Count(); i++)
+            {
+                escenas[i].BoundingBox.Render();
+            }
+        }
+
+        private void RenderEscenas()
+        {
+            for (int i = 0; i < escenas.Count(); i++)
+            {
+                escenas[i].RenderAll();
+            }
+        }
+
+        //IMPORTANTE PARA RENDERIZAR BIEN LA ESCENA
+        private void quitarMeshesOriginalesEscenas()
+        {
+            for (int i = 0; i < escenas.Count(); i++)
+            {
+                for (int j = 0; j < escenas[i].Meshes.Count(); j++)
+                {
+                    if (escenas[i].Meshes[j].MeshInstances.Count() != 0)
+                    {
+                        escenas[i].Meshes.Remove(escenas[i].Meshes[j]);
+                    }
+                }
+            }
+        }       
+     
+
+
     }
 }
