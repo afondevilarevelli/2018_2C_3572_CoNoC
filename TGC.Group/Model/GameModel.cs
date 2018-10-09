@@ -56,9 +56,7 @@ namespace TGC.Group.Model
             var loader = new TgcSceneLoader();
 
             escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion1-TgcScene.xml"));
-            //escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion1-TgcScene.xml"));
-
-            quitarMeshesOriginalesEscenas();
+            escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion2-TgcScene.xml"));      
 
             Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);
 
@@ -77,7 +75,9 @@ namespace TGC.Group.Model
             texturaHeightmap = MediaDir + "Bloque1\\" + "tgcPisoEscenario.png";
             terreno2.loadTexture(texturaHeightmap);
 
+            moverMeshesEscenas();
 
+            quitarMeshesOriginalesEscenas();
         }
 
 		public override void Update()
@@ -177,6 +177,9 @@ namespace TGC.Group.Model
             }
         }       
      
+        private void moverMeshesEscenas(){
+        
+        }
 
 
     }
