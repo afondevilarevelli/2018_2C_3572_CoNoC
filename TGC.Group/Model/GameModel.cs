@@ -30,7 +30,7 @@ namespace TGC.Group.Model
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
         private List<TgcScene> escenas = new List<TgcScene>();
-        
+
 
         /// <summary>
         ///     Constructor del juego.
@@ -52,15 +52,17 @@ namespace TGC.Group.Model
         /// </summary>
 
         public override void Init()
-        { 
-            var loader = new TgcSceneLoader();
+        {
+            var loader = new TgcSceneLoader();           
 
             escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion1-TgcScene.xml"));
-            escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion2-TgcScene.xml"));      
+            escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion2-TgcScene.xml"));
+
+            moverMeshesYQuitarOriginalesEscenas();
 
             Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);
 
-            
+
             //Path de Heightmap default del terreno 
             Heightmap = MediaDir + "Bloque1\\" + "heightmapTP.jpg";
             terreno1.loadHeightmap(Heightmap, 20.0f, 1.3f, new TGCVector3(0.0f, 0.0f, 0.0f));
@@ -70,58 +72,54 @@ namespace TGC.Group.Model
 
             //Path de Heightmap default del terreno 
             Heightmap = MediaDir + "Bloque1\\" + "heightmapTP.jpg";
-            terreno2.loadHeightmap(Heightmap, 20.0f, 1.3f, terreno1.Center + new TGCVector3(50, 0.0f, 0.0f));
+            terreno2.loadHeightmap(Heightmap, 20.0f, 1.3f, terreno1.Center + new TGCVector3(62, 0.0f, 0.0f));
             //Path de Textura default del terreno y Modifier para cambiarla
             texturaHeightmap = MediaDir + "Bloque1\\" + "tgcPisoEscenario.png";
             terreno2.loadTexture(texturaHeightmap);
 
-            moverMeshesEscenas();
 
-            quitarMeshesOriginalesEscenas();
         }
 
-		public override void Update()
+        public override void Update()
         {
             PreUpdate();
 
-			//TGCVector3 normalLA = TGCVector3.Normalize(Camara.LookAt);
-
-			//Capturar Input teclado
-			if (Input.keyPressed(Key.F))
+            //Capturar Input teclado
+            if (Input.keyPressed(Key.F))
             {
                 BoundingBox = !BoundingBox;
-            }
+            }      
 
-			PostUpdate();
+            PostUpdate();
         }
 
 
-		/// <summary>
-		///     Se llama cada vez que hay que refrescar la pantalla.
-		///     Escribir aquí todo el código referido al renderizado.
-		///     Borrar todo lo que no haga falta.
-		/// </summary>
-		public override void Render()
+        /// <summary>
+        ///     Se llama cada vez que hay que refrescar la pantalla.
+        ///     Escribir aquí todo el código referido al renderizado.
+        ///     Borrar todo lo que no haga falta.
+        /// </summary>
+        public override void Render()
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
 
             //Dibuja un texto por pantalla
-            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);           
+            DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
 
             //Render terrain
             terreno1.Render();
             terreno2.Render();
             //Render escena
-            RenderEscenas(); //NO SE COMO IR MOVIENDO LAS ESCENAS CON LOS HEIGHTMAPS!!!!!!!!!!!!!!!!!!!!
+            RenderEscenas(); 
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
             {
                 BoundingBoxEscenas();
             }
-						
-			PostRender();
+
+            PostRender();
         }
 
         /// <summary>
@@ -140,7 +138,7 @@ namespace TGC.Group.Model
 
         private void DisposeEscenas()
         {
-            for(int i=0; i < escenas.Count(); i++)
+            for (int i = 0; i < escenas.Count(); i++)
             {
                 escenas[i].DisposeAll();
             }
@@ -158,29 +156,30 @@ namespace TGC.Group.Model
         {
             for (int i = 0; i < escenas.Count(); i++)
             {
-                escenas[i].RenderAll();
+                escenas[i].RenderAll();              
             }
         }
 
-        //IMPORTANTE PARA RENDERIZAR BIEN LA ESCENA
-        private void quitarMeshesOriginalesEscenas()
+        //IMPORTANTE QUITAR MESHES ORIGINALES PARA RENDERIZAR BIEN LA ESCENA       
+        private void moverMeshesYQuitarOriginalesEscenas()
         {
+            float largo = 0;
             for (int i = 0; i < escenas.Count(); i++)
             {
                 for (int j = 0; j < escenas[i].Meshes.Count(); j++)
-                {
+                {                   
                     if (escenas[i].Meshes[j].MeshInstances.Count() != 0)
                     {
+                        for (int k=0; k<escenas[i].Meshes[j].MeshInstances.Count(); k++)
+                        {
+                            escenas[i].Meshes[j].MeshInstances[k].Transform = TGCMatrix.Translation(largo, 0f, 0f);
+                        }
                         escenas[i].Meshes.Remove(escenas[i].Meshes[j]);
-                    }
-                }
+                    }                  
+                }                
+                largo += 62;
             }
-        }       
-     
-        private void moverMeshesEscenas(){
-        
         }
-
 
     }
 }
