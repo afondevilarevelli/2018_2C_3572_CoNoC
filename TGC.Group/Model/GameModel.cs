@@ -32,6 +32,10 @@ namespace TGC.Group.Model
         private TgcMesh personaje;
         private float velocidadDesplazamientoPersonaje = 250f;
         private camaraTerceraPersona camaraInterna;
+        private readonly float minimoXRuta = -143.6097f;
+        private readonly float maximoXRuta = 278.5438f;
+        private float anchoRuta;
+        private float largoRuta;
         //private int cantidadEscenas = 10;
 
         /// <summary>
@@ -55,25 +59,33 @@ namespace TGC.Group.Model
 
         public override void Init()
         {
+            anchoRuta = minimoXRuta * maximoXRuta;
             var loader = new TgcSceneLoader();
 
             //cargo y acomodo personaje
             personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
-            personaje.AutoTransform = true;     
-            personaje.Move(65f, 15f, -200f);
+            personaje.AutoTransform = true;
+            //personaje.Move(65f, 15f, -200f);
+            personaje.Move( -100, 15, -200 );
 
             //cargo las escenas
             var escena1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario1-TgcScene.xml");
             var escena2 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario2-TgcScene.xml");
             var escena3 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario3-TgcScene.xml");
+            var escena4 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario4-TgcScene.xml");
+            var escena5 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario5-TgcScene.xml");
 
             escenas.Add(escena1);
             escenas.Add(escena2);
             escenas.Add(escena3);
+            escenas.Add(escena4);
+            escenas.Add(escena5);
             calcularPrimeraDisposicionAleatoriaDeEscenarios();
 
+            //cargo los obstaculos
 
-            camaraInterna = new camaraTerceraPersona(personaje.Position, 200, -500);
+
+            camaraInterna = new camaraTerceraPersona(personaje.Position, 130, -500);
             Camara = camaraInterna;
         }
 
@@ -89,26 +101,34 @@ namespace TGC.Group.Model
                 BoundingBox = !BoundingBox;
             }
 
-            if (Input.keyDown(Key.Right))
+            if (Input.keyDown(Key.D))
             {
                 movement.X = 1;           
             }
-            else if(Input.keyDown(Key.Left))
+            else if(Input.keyDown(Key.A))
             {
                 movement.X = -1;
             }
 
-            if (Input.keyDown(Key.Up))
+            if (Input.keyDown(Key.W))
             {
                 movement.Z = 1;
             }
-            else if (Input.keyDown(Key.Down))
+            else if (Input.keyDown(Key.S))
             {
                 movement.Z = -1;
             }
 
+            //Guardar posicion original en X antes de cambiarla
+            var originalPosX = personaje.Position.X;
+
             movement *= velocidadDesplazamientoPersonaje * ElapsedTime;
             personaje.Move(movement);
+            //chequeo si pasa los limites de ancho de la ruta
+            if (personaje.Position.X < minimoXRuta || personaje.Position.X > maximoXRuta)
+            {
+                personaje.Position = new TGCVector3(originalPosX, personaje.Position.Y, personaje.Position.Z);
+            }
 
             camaraInterna.Target = personaje.Position;
             PostUpdate();
@@ -127,6 +147,7 @@ namespace TGC.Group.Model
 
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
+            DrawText.drawText("Posición del personaje: " + TGCVector3.PrintVector3(personaje.Position), 0, 40, System.Drawing.Color.Red);
 
             //Render personaje
             personaje.Render();
@@ -195,6 +216,7 @@ namespace TGC.Group.Model
                 }
                     
                 largo += movimientoEscenario;
+                largoRuta = largo;
             }                   
         }
 
