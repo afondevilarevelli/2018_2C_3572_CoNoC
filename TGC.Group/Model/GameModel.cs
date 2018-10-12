@@ -13,6 +13,7 @@ using TGC.Core.Textures;
 using TGC.Core.SceneLoader;
 using System.Collections.Generic;
 using System;
+using TGC.Group.Camara;
 
 namespace TGC.Group.Model
 {
@@ -30,6 +31,7 @@ namespace TGC.Group.Model
         private List<TgcScene> escenas = new List<TgcScene>(); //lista de instancis de meshes que son escenarios
         private TgcMesh personaje;
         private float velocidadDesplazamientoPersonaje = 250f;
+        private camaraTerceraPersona camaraInterna;
         //private int cantidadEscenas = 10;
 
         /// <summary>
@@ -71,8 +73,8 @@ namespace TGC.Group.Model
             calcularPrimeraDisposicionAleatoriaDeEscenarios();
 
 
-            Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);       
-
+            camaraInterna = new camaraTerceraPersona(personaje.Position, 200, -500);
+            Camara = camaraInterna;
         }
 
         public override void Update()
@@ -108,6 +110,7 @@ namespace TGC.Group.Model
             movement *= velocidadDesplazamientoPersonaje * ElapsedTime;
             personaje.Move(movement);
 
+            camaraInterna.Target = personaje.Position;
             PostUpdate();
         }
 

@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="Model\Camara\CamaraExploradora.cs" />
     <Compile Include="Model\Camara\camaraRotacional.cs" />
+    <Compile Include="Model\Camara\camaraTerceraPersona.cs" />
     <Compile Include="Model\GameModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
