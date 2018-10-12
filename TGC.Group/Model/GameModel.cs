@@ -71,7 +71,7 @@ namespace TGC.Group.Model
             //cargo y acomodo personaje
             personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
             personaje.AutoTransform = true;
-            personaje.Move(65f, 15f, -200f);     
+            personaje.Move(65f, 15f, -100f);     
 
             //cargo las escenas
             var escena1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario1-TgcScene.xml");
@@ -173,6 +173,10 @@ namespace TGC.Group.Model
         {
             //Inicio el render de la escena, para ejemplos simples. Cuando tenemos postprocesado o shaders es mejor realizar las operaciones según nuestra conveniencia.
             PreRender();
+
+            //BackgroundColor
+            D3DDevice.Instance.Device.Clear(ClearFlags.Target | ClearFlags.ZBuffer, Color.Black, 1.0f, 0);
+            ClearTextures();
 
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
