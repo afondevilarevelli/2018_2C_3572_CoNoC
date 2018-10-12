@@ -14,6 +14,8 @@ using TGC.Core.SceneLoader;
 using System.Collections.Generic;
 using System;
 using TGC.Group.Camara;
+using TGC.Core.Collision;
+using static TGC.Core.Collision.TgcCollisionUtils;
 
 namespace TGC.Group.Model
 {
@@ -28,15 +30,18 @@ namespace TGC.Group.Model
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
         private float movimientoEscenario = 957f;
-        private List<TgcScene> escenas = new List<TgcScene>(); //lista de instancis de meshes que son escenarios
+        private List<TgcScene> escenas = new List<TgcScene>(); 
+        private List<TgcMesh> obstaculos = new List<TgcMesh>(); 
         private TgcMesh personaje;
         private float velocidadDesplazamientoPersonaje = 250f;
         private camaraTerceraPersona camaraInterna;
         private readonly float minimoXRuta = -143.6097f;
         private readonly float maximoXRuta = 278.5438f;
+        private readonly float minimoZObstaculo = 600f;
         private float anchoRuta;
         private float largoRuta;
-        //private int cantidadEscenas = 10;
+        private List<float> posiblesPosicionesObstaculosEnX = new List<float>();
+        private bool huboColision = false;
 
         /// <summary>
         ///     Constructor del juego.
@@ -59,14 +64,14 @@ namespace TGC.Group.Model
 
         public override void Init()
         {
-            anchoRuta = minimoXRuta * maximoXRuta;
+            anchoRuta = maximoXRuta - minimoXRuta;
+
             var loader = new TgcSceneLoader();
 
             //cargo y acomodo personaje
             personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
             personaje.AutoTransform = true;
-            //personaje.Move(65f, 15f, -200f);
-            personaje.Move( -100, 15, -200 );
+            personaje.Move(65f, 15f, -200f);     
 
             //cargo las escenas
             var escena1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario1-TgcScene.xml");
@@ -83,7 +88,17 @@ namespace TGC.Group.Model
             calcularPrimeraDisposicionAleatoriaDeEscenarios();
 
             //cargo los obstaculos
+            var obstaculo1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\obstaculos\\sarcofago-TgcScene.xml").Meshes[0];
+            var obstaculo2 = loader.loadSceneFromFile(MediaDir + "Bloque1\\obstaculos\\patrullero-TgcScene.xml").Meshes[0];
 
+            obstaculos.Add(obstaculo1);
+            obstaculos.Add(obstaculo2);
+
+            posiblesPosicionesObstaculosEnX.Add(anchoRuta  / 3 + minimoXRuta ); //bien
+            posiblesPosicionesObstaculosEnX.Add(anchoRuta / 3 + minimoXRuta + anchoRuta / 6 + anchoRuta/5); //bien
+            posiblesPosicionesObstaculosEnX.Add(anchoRuta / 4 + maximoXRuta - anchoRuta / 6); //bien
+
+            calcularPosicionObstaculos();
 
             camaraInterna = new camaraTerceraPersona(personaje.Position, 130, -500);
             Camara = camaraInterna;
@@ -91,7 +106,7 @@ namespace TGC.Group.Model
 
         public override void Update()
         {
-            PreUpdate();
+            PreUpdate();      
 
             var movement = TGCVector3.Empty;
 
@@ -124,8 +139,22 @@ namespace TGC.Group.Model
 
             movement *= velocidadDesplazamientoPersonaje * ElapsedTime;
             personaje.Move(movement);
-            //chequeo si pasa los limites de ancho de la ruta
-            if (personaje.Position.X < minimoXRuta || personaje.Position.X > maximoXRuta)
+
+            huboColision = false;
+
+            //chequeo si hay colision entre bounding boxes
+            for (int i = 0; i < obstaculos.Count(); i++)
+            {
+                var resultadoColision = TgcCollisionUtils.classifyBoxBox(personaje.BoundingBox, obstaculos[i].BoundingBox);
+                if (resultadoColision != TgcCollisionUtils.BoxBoxResult.Afuera)
+                {      
+                    huboColision = true;
+                    break;              
+                }            
+            }
+
+            //chequeo si hubo colision y si supera el ancho de la ruta
+            if (huboColision || (personaje.Position.X < minimoXRuta || personaje.Position.X > maximoXRuta) )
             {
                 personaje.Position = new TGCVector3(originalPosX, personaje.Position.Y, personaje.Position.Z);
             }
@@ -147,13 +176,17 @@ namespace TGC.Group.Model
 
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
-            DrawText.drawText("Posición del personaje: " + TGCVector3.PrintVector3(personaje.Position), 0, 40, System.Drawing.Color.Red);
-
+            DrawText.drawText("Posición del personaje: " + TGCVector3.PrintVector3(personaje.Position), 0, 40, System.Drawing.Color.Red);           
             //Render personaje
             personaje.Render();
             //Render escenas
-            RenderEscenas(); 
-            //Render instancias escenas            
+            RenderEscenas();
+            //Render obstaculos 
+            RenderObstaculos();
+            if (huboColision)
+            {
+                DrawText.drawText("PERDISTE!!!: ", 500, 20, System.Drawing.Color.DarkViolet);
+            }
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
@@ -188,10 +221,10 @@ namespace TGC.Group.Model
         private void BoundingBoxPersonajeYObstaculos()
         {
             personaje.BoundingBox.Render();
-            /*for (int i = 0; i < obstaculos.Count(); i++)
+            for (int i = 0; i < obstaculos.Count(); i++)
             {
                 obstaculos[i].BoundingBox.Render();
-            } */
+            } 
         }
   
         private void RenderEscenas()
@@ -200,7 +233,15 @@ namespace TGC.Group.Model
             {
                 escenas[i].RenderAll();
             }
-        }            
+        }
+
+        private void RenderObstaculos()
+        {
+            for (int i = 0; i < obstaculos.Count(); i++)
+            {
+                obstaculos[i].Render();
+            }
+        }
 
         private void calcularPrimeraDisposicionAleatoriaDeEscenarios()
         {
@@ -220,7 +261,25 @@ namespace TGC.Group.Model
             }                   
         }
 
+        private void calcularPosicionObstaculos()
+        {
+            var espacio = minimoZObstaculo;
+            Random aleatorio = new Random();
+            var espacioEntreObstaculosMinimo = 700;
+            var espacioEntreObstaculosMaximo = 900;
+            for (int i = 0; i < obstaculos.Count(); i++)
+            {
+                obstaculos[i].Position = new TGCVector3(obtenerPosicionObstaculoEnX(), 0f, espacio);
+                espacio += aleatorio.Next(espacioEntreObstaculosMinimo, espacioEntreObstaculosMaximo);
+            }
+        }
 
+        private float obtenerPosicionObstaculoEnX()
+        {
+            Random aleatorio = new Random();
+            int index = aleatorio.Next(0, posiblesPosicionesObstaculosEnX.Count());
+            return posiblesPosicionesObstaculosEnX[index];
+        }
 
     }
 }
