@@ -90,9 +90,11 @@ namespace TGC.Group.Model
             //cargo los obstaculos
             var obstaculo1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\obstaculos\\sarcofago-TgcScene.xml").Meshes[0];
             var obstaculo2 = loader.loadSceneFromFile(MediaDir + "Bloque1\\obstaculos\\patrullero-TgcScene.xml").Meshes[0];
+            var obstaculo3 = loader.loadSceneFromFile(MediaDir + "Bloque1\\obstaculos\\estatua-TgcScene.xml").Meshes[0];
 
             obstaculos.Add(obstaculo1);
             obstaculos.Add(obstaculo2);
+            obstaculos.Add(obstaculo3);
 
             posiblesPosicionesObstaculosEnX.Add(anchoRuta  / 3 + minimoXRuta ); //bien
             posiblesPosicionesObstaculosEnX.Add(anchoRuta / 3 + minimoXRuta + anchoRuta / 6 + anchoRuta/5); //bien
