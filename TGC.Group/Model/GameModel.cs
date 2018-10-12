@@ -12,6 +12,7 @@ using System.Linq;
 using TGC.Core.Textures;
 using TGC.Core.SceneLoader;
 using System.Collections.Generic;
+using System;
 
 namespace TGC.Group.Model
 {
@@ -22,15 +23,14 @@ namespace TGC.Group.Model
     ///     line 97.
     /// </summary>
     public class GameModel : TgcExample
-    {
-        private string Heightmap;
-        private string texturaHeightmap;
-        TgcSimpleTerrain terreno1 = new TgcSimpleTerrain();
-        TgcSimpleTerrain terreno2 = new TgcSimpleTerrain();
+    {   
         //Boleano para ver si dibujamos el boundingbox
         private bool BoundingBox { get; set; }
-        private List<TgcScene> escenas = new List<TgcScene>();
-
+        private float movimientoEscenario = 957f;
+        private List<TgcScene> escenas = new List<TgcScene>(); //lista de instancis de meshes que son escenarios
+        private TgcMesh personaje;
+        private float velocidadDesplazamientoPersonaje = 250f;
+        //private int cantidadEscenas = 10;
 
         /// <summary>
         ///     Constructor del juego.
@@ -53,30 +53,25 @@ namespace TGC.Group.Model
 
         public override void Init()
         {
-            var loader = new TgcSceneLoader();           
+            var loader = new TgcSceneLoader();
 
-            escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion1-TgcScene.xml"));
-            escenas.Add(loader.loadSceneFromFile(MediaDir + "Bloque1\\vegetacion2-TgcScene.xml"));
+            //cargo y acomodo personaje
+            personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
+            personaje.AutoTransform = true;     
+            personaje.Move(65f, 15f, -200f);
 
-            moverMeshesYQuitarOriginalesEscenas();
+            //cargo las escenas
+            var escena1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario1-TgcScene.xml");
+            var escena2 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario2-TgcScene.xml");
+            var escena3 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario3-TgcScene.xml");
 
-            Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);
+            escenas.Add(escena1);
+            escenas.Add(escena2);
+            escenas.Add(escena3);
+            calcularPrimeraDisposicionAleatoriaDeEscenarios();
 
 
-            //Path de Heightmap default del terreno 
-            Heightmap = MediaDir + "Bloque1\\" + "heightmapTP.jpg";
-            terreno1.loadHeightmap(Heightmap, 20.0f, 1.3f, new TGCVector3(0.0f, 0.0f, 0.0f));
-            //Path de Textura default del terreno y Modifier para cambiarla
-            texturaHeightmap = MediaDir + "Bloque1\\" + "tgcPisoEscenario.png";
-            terreno1.loadTexture(texturaHeightmap);
-
-            //Path de Heightmap default del terreno 
-            Heightmap = MediaDir + "Bloque1\\" + "heightmapTP.jpg";
-            terreno2.loadHeightmap(Heightmap, 20.0f, 1.3f, terreno1.Center + new TGCVector3(62, 0.0f, 0.0f));
-            //Path de Textura default del terreno y Modifier para cambiarla
-            texturaHeightmap = MediaDir + "Bloque1\\" + "tgcPisoEscenario.png";
-            terreno2.loadTexture(texturaHeightmap);
-
+            Camara = new CamaraExploradora(new TGCVector3(2511f, 1125f, 150f), Input);       
 
         }
 
@@ -84,11 +79,34 @@ namespace TGC.Group.Model
         {
             PreUpdate();
 
+            var movement = TGCVector3.Empty;
+
             //Capturar Input teclado
             if (Input.keyPressed(Key.F))
             {
                 BoundingBox = !BoundingBox;
-            }      
+            }
+
+            if (Input.keyDown(Key.Right))
+            {
+                movement.X = 1;           
+            }
+            else if(Input.keyDown(Key.Left))
+            {
+                movement.X = -1;
+            }
+
+            if (Input.keyDown(Key.Up))
+            {
+                movement.Z = 1;
+            }
+            else if (Input.keyDown(Key.Down))
+            {
+                movement.Z = -1;
+            }
+
+            movement *= velocidadDesplazamientoPersonaje * ElapsedTime;
+            personaje.Move(movement);
 
             PostUpdate();
         }
@@ -107,16 +125,16 @@ namespace TGC.Group.Model
             //Dibuja un texto por pantalla
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
 
-            //Render terrain
-            terreno1.Render();
-            terreno2.Render();
-            //Render escena
+            //Render personaje
+            personaje.Render();
+            //Render escenas
             RenderEscenas(); 
+            //Render instancias escenas            
 
             //Render de BoundingBox, muy útil para debug de colisiones.
             if (BoundingBox)
             {
-                BoundingBoxEscenas();
+                BoundingBoxPersonajeYObstaculos();
             }
 
             PostRender();
@@ -129,14 +147,13 @@ namespace TGC.Group.Model
         /// </summary>
         public override void Dispose()
         {
-            DisposeEscenas();
-            terreno1.Dispose();
-            terreno2.Dispose();
+            disposeEscenas();
+            personaje.Dispose();
         }
 
         //FUNCIONES PRIVADAS
 
-        private void DisposeEscenas()
+        private void disposeEscenas()
         {
             for (int i = 0; i < escenas.Count(); i++)
             {
@@ -144,42 +161,41 @@ namespace TGC.Group.Model
             }
         }
 
-        private void BoundingBoxEscenas()
+        private void BoundingBoxPersonajeYObstaculos()
         {
-            for (int i = 0; i < escenas.Count(); i++)
+            personaje.BoundingBox.Render();
+            /*for (int i = 0; i < obstaculos.Count(); i++)
             {
-                escenas[i].BoundingBox.Render();
-            }
+                obstaculos[i].BoundingBox.Render();
+            } */
         }
-
+  
         private void RenderEscenas()
         {
             for (int i = 0; i < escenas.Count(); i++)
             {
-                escenas[i].RenderAll();              
+                escenas[i].RenderAll();
             }
+        }            
+
+        private void calcularPrimeraDisposicionAleatoriaDeEscenarios()
+        {
+            float largo = 0;    
+            //Random fabricaNumerosAleatorios = new Random();
+            //HashSet<int> historialNumeros = new HashSet<int>();
+
+            for (int i=0; i < escenas.Count(); i++)
+            {                                  
+                for (int k = 0; k < escenas[i].Meshes.Count(); k++)
+                {
+                    escenas[i].Meshes[k].Move(0f,0f,largo);   
+                }
+                    
+                largo += movimientoEscenario;
+            }                   
         }
 
-        //IMPORTANTE QUITAR MESHES ORIGINALES PARA RENDERIZAR BIEN LA ESCENA       
-        private void moverMeshesYQuitarOriginalesEscenas()
-        {
-            float largo = 0;
-            for (int i = 0; i < escenas.Count(); i++)
-            {
-                for (int j = 0; j < escenas[i].Meshes.Count(); j++)
-                {                   
-                    if (escenas[i].Meshes[j].MeshInstances.Count() != 0)
-                    {
-                        for (int k=0; k<escenas[i].Meshes[j].MeshInstances.Count(); k++)
-                        {
-                            escenas[i].Meshes[j].MeshInstances[k].Transform = TGCMatrix.Translation(largo, 0f, 0f);
-                        }
-                        escenas[i].Meshes.Remove(escenas[i].Meshes[j]);
-                    }                  
-                }                
-                largo += 62;
-            }
-        }
+
 
     }
 }
