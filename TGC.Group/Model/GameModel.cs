@@ -42,6 +42,7 @@ namespace TGC.Group.Model
         private float largoRuta;
         private List<float> posiblesPosicionesObstaculosEnX = new List<float>();
         private bool huboColision = false;
+        private TgcSkyBox skyBox;
 
         /// <summary>
         ///     Constructor del juego.
@@ -108,6 +109,19 @@ namespace TGC.Group.Model
 
             camaraInterna = new camaraTerceraPersona(personaje.Position, 130, -500);
             Camara = camaraInterna;
+
+            //Crear SkyBox
+            skyBox = new TgcSkyBox();
+            skyBox.Center = TGCVector3.Empty;
+            skyBox.Size = new TGCVector3(10000, 10000, 10000);
+            var texturesPath = MediaDir + "Bloque1\\SkyBox2\\";
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Up, texturesPath + "lun4_up.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Down, texturesPath + "lun4_dn.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Left, texturesPath + "lun4_lf.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Right, texturesPath + "lun4_rt.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Front, texturesPath + "lun4_bk.jpg");
+            skyBox.setFaceTexture(TgcSkyBox.SkyFaces.Back, texturesPath + "lun4_ft.jpg");
+            skyBox.Init();
         }
 
         public override void Update()
@@ -195,7 +209,7 @@ namespace TGC.Group.Model
             RenderObstaculos();
             if (huboColision)
             {
-                DrawText.drawText("PERDISTE!!!: ", 500, 20, System.Drawing.Color.DarkViolet);
+                DrawText.drawText("PERDISTE!!!: ", 500, 20, System.Drawing.Color.WhiteSmoke);
             }
 
             //Render de BoundingBox, muy útil para debug de colisiones.
@@ -203,6 +217,9 @@ namespace TGC.Group.Model
             {
                 BoundingBoxPersonajeYObstaculos();
             }
+
+            //Render del SkyBox
+            skyBox.Render();
 
             PostRender();
         }
@@ -273,10 +290,11 @@ namespace TGC.Group.Model
 
         private void calcularPosicionObstaculos()
         {
+            float anterior;
             var espacio = minimoZObstaculo;
             Random aleatorio = new Random();
             var espacioEntreObstaculosMinimo = 700;
-            var espacioEntreObstaculosMaximo = 900;
+            var espacioEntreObstaculosMaximo = 1000;
             for (int i = 0; i < obstaculos.Count(); i++)
             {
                 obstaculos[i].Position = new TGCVector3(obtenerPosicionObstaculoEnX(), 0f, espacio);
