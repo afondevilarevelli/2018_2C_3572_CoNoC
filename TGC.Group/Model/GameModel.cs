@@ -16,6 +16,8 @@ using System;
 using TGC.Group.Camara;
 using TGC.Core.Collision;
 using static TGC.Core.Collision.TgcCollisionUtils;
+using TGC.Core.SkeletalAnimation;
+using TGC.Core;
 
 namespace TGC.Group.Model
 {
@@ -32,11 +34,14 @@ namespace TGC.Group.Model
         private float movimientoEscenario = 957f;
         private List<TgcScene> escenas = new List<TgcScene>(); 
         private List<TgcMesh> obstaculos = new List<TgcMesh>(); 
-        private TgcMesh personaje;
+        //private TgcMesh personaje;
+        private TgcSkeletalMesh personaje;
         private float velocidadDesplazamientoPersonaje = 250f;
         private camaraTerceraPersona camaraInterna;
         private readonly float minimoXRuta = -143.6097f;
         private readonly float maximoXRuta = 278.5438f;
+        private readonly float minimoXRutaPersonaje = -218.3236f;
+        private readonly float maximoXRutaPersonaje = 209.4296f;
         private readonly float minimoZObstaculo = 600f;
         private float anchoRuta;
         private float largoRuta;
@@ -69,10 +74,24 @@ namespace TGC.Group.Model
 
             var loader = new TgcSceneLoader();
 
+            var pathMesh = MediaDir + "Bloque1\\SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
+            var mediaPath = MediaDir + "Bloque1\\SkeletalAnimations\\Robot\\"; ;
+            string[] animationsPath = { mediaPath + "Correr" + "-TgcSkeletalAnim.xml" };
+  
             //cargo y acomodo personaje
-            personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
+            //personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
+            //Cargar mesh y animaciones
+            var loaderSkeleton = new TgcSkeletalLoader();
+            personaje = loaderSkeleton.loadMeshAndAnimationsFromFile(pathMesh, mediaPath, animationsPath);
+            //Crear esqueleto a modo Debug
+            personaje.buildSkletonMesh();
+            //Elegir animacion Caminando
+            personaje.playAnimation("Correr", true);
+
             personaje.AutoTransform = true;
-            personaje.Move(65f, 15f, -100f);     
+            personaje.Move(65f, 15f, -100f);
+            personaje.Scale = new TGCVector3(0.75f, 0.75f, 0.75f);
+            personaje.RotateY(FastMath.ToRad(179f));
 
             //cargo las escenas
             var escena1 = loader.loadSceneFromFile(MediaDir + "Bloque1\\escenario1-TgcScene.xml");
@@ -156,6 +175,7 @@ namespace TGC.Group.Model
 
             //Guardar posicion original en X antes de cambiarla
             var originalPosX = personaje.Position.X;
+            var originalPosZ = personaje.Position.Z;
 
             movement *= velocidadDesplazamientoPersonaje * ElapsedTime;
             personaje.Move(movement);
@@ -174,10 +194,14 @@ namespace TGC.Group.Model
             }
 
             //chequeo si hubo colision y si supera el ancho de la ruta
-            if (huboColision || (personaje.Position.X < minimoXRuta || personaje.Position.X > maximoXRuta) )
+            if (huboColision  )
             {
-                personaje.Position = new TGCVector3(originalPosX, personaje.Position.Y, personaje.Position.Z);
+                personaje.Position = new TGCVector3(originalPosX, personaje.Position.Y, originalPosZ);
             }
+            if((personaje.Position.X < minimoXRutaPersonaje || personaje.Position.X > maximoXRutaPersonaje))
+            {
+                personaje.Position = new TGCVector3(originalPosX, personaje.Position.Y, personaje.Position.Z );
+            }      
 
             camaraInterna.Target = personaje.Position;
             PostUpdate();
@@ -202,7 +226,8 @@ namespace TGC.Group.Model
             DrawText.drawText("Con la tecla F se dibuja el bounding box.", 0, 20, Color.OrangeRed);
             DrawText.drawText("Posición del personaje: " + TGCVector3.PrintVector3(personaje.Position), 0, 40, System.Drawing.Color.Red);           
             //Render personaje
-            personaje.Render();
+            //personaje.Render();
+            personaje.animateAndRender(ElapsedTime);
             //Render escenas
             RenderEscenas();
             //Render obstaculos 
