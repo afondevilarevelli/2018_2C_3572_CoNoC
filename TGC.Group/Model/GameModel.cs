@@ -76,7 +76,9 @@ namespace TGC.Group.Model
 
             var pathMesh = MediaDir + "Bloque1\\SkeletalAnimations\\Robot\\Robot-TgcSkeletalMesh.xml";
             var mediaPath = MediaDir + "Bloque1\\SkeletalAnimations\\Robot\\"; ;
-            string[] animationsPath = { mediaPath + "Correr" + "-TgcSkeletalAnim.xml" };
+            string[] animationsPath = { mediaPath + "Correr" + "-TgcSkeletalAnim.xml",
+                                        mediaPath + "Parado" + "-TgcSkeletalAnim.xml"
+                                    };
   
             //cargo y acomodo personaje
             //personaje = loader.loadSceneFromFile(MediaDir + "Bloque1\\personaje-TgcScene.xml").Meshes[0];
@@ -86,7 +88,7 @@ namespace TGC.Group.Model
             //Crear esqueleto a modo Debug
             personaje.buildSkletonMesh();
             //Elegir animacion Caminando
-            personaje.playAnimation("Correr", true);
+            personaje.playAnimation("Parado", true);
 
             personaje.AutoTransform = true;
             personaje.Move(65f, 15f, -100f);
@@ -157,7 +159,7 @@ namespace TGC.Group.Model
 
             if (Input.keyDown(Key.D))
             {
-                movement.X = 1;           
+                movement.X = 1;
             }
             else if(Input.keyDown(Key.A))
             {
@@ -167,10 +169,17 @@ namespace TGC.Group.Model
             if (Input.keyDown(Key.W))
             {
                 movement.Z = 1;
+                personaje.playAnimation("Correr", true);
             }
             else if (Input.keyDown(Key.S))
             {
                 movement.Z = -1;
+                personaje.playAnimation("Correr", true);
+            }
+
+            if (Input.keyUp(Key.W) || Input.keyUp(Key.S) )
+            {
+                personaje.playAnimation("Parado", true);
             }
 
             //Guardar posicion original en X antes de cambiarla
